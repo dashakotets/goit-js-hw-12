@@ -1,23 +1,20 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://pixabay.com/api/';
+// axios.defaults.baseURL = 'https://pixabay.com/api/';
 
-export const fetchPhotos = searchedPhotos => {
-    const urlParams = new URLSearchParams({
-        key: '45683137-9da9ef345b4290ae910ded200',
+export const fetchPhotos = (searchedPhotos, page) => {
+    const axiosOptions = {
+        params: {key: '45683137-9da9ef345b4290ae910ded200',
         q: searchedPhotos,
         image_type: 'photo',
         orientation: 'horizontal',
         safesearch: true,
-    });
+        page: page,
+        per_page: 15,
+        },
+        
+    };
 
-    return fetch(`${BASE_URL}?${urlParams}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            };
-            return response.json();
-        });
+    return axios.get(`https://pixabay.com/api/`, axiosOptions);
 };
 
-//element.classList.toggle(className)

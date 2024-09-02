@@ -10,7 +10,10 @@ import { createGalleryCardTemplate } from "./js/render-functions";
 const searchForm = document.querySelector('.js-search-form');
 const galleryEl = document.querySelector('.js-gallery');
 const loaderEl = document.querySelector('.loader');
+const loadMoreBtn = document.querySelector('.js-load-more');
 
+
+const currentPage = 1;
 
 const lightbox = new SimpleLightbox('.gallery a', {
                 captions: true, 
@@ -24,7 +27,7 @@ const onSearchSubmit = event => {
 
 
     loaderEl.classList.toggle('is-hidden');
-    fetchPhotos(searchedValue)
+    fetchPhotos(searchedValue, currentPage)
         .then(data => {
             loaderEl.classList.toggle('is-hidden');
             if (data.hits.length === 0) {
