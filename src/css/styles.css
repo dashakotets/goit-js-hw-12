@@ -127,7 +127,7 @@ li {
     justify-content: center;
 }
 
-.loader.is-hidden {
+.is-hidden {
     display: none;
 }
 

@@ -13,7 +13,7 @@ const loaderEl = document.querySelector('.loader');
 const loadMoreBtn = document.querySelector('.js-load-more');
 
 
-const currentPage = 1;
+let currentPage = 1;
 
 const lightbox = new SimpleLightbox('.gallery a', {
                 captions: true, 
@@ -21,42 +21,40 @@ const lightbox = new SimpleLightbox('.gallery a', {
                 captionPosition: 'bottom',
 });
             
-const onSearchSubmit = event => {
+const onSearchSubmit = async event => {
+    try {
     event.preventDefault();
     const searchedValue = searchForm.elements.user_query.value;
 
-
+    currentPage = 1;
+        
     loaderEl.classList.toggle('is-hidden');
-    fetchPhotos(searchedValue, currentPage)
-        .then(data => {
-            loaderEl.classList.toggle('is-hidden');
-            if (data.hits.length === 0) {
-                iziToast.error({
-                    message: 'Sorry, there are no images matching your search query. Please try again!',
-                    position: 'topRight',
-                });
+    const response = await fetchPhotos(searchedValue, currentPage);
+    loaderEl.classList.toggle('is-hidden');
+        
+    if (response.data.hits.length === 0) {
+        iziToast.error({
+            message: 'Sorry, there are no images matching your search query. Please try again!',
+            position: 'topRight',
+            });
 
-                galleryEl.innerHTML = '';
-                
+        galleryEl.innerHTML = '';
+        searchForm.reset();
+        return;
+    };
 
-                return;
-            };
+    const galleryCardsTemplate = response.data.hits.map(imgDetails => createGalleryCardTemplate(imgDetails)).join('');
 
-            const galleryCardsTemplate = data.hits.map(imgDetails => createGalleryCardTemplate(imgDetails)).join('');
+    galleryEl.innerHTML = galleryCardsTemplate;
 
-            galleryEl.innerHTML = galleryCardsTemplate;
-
-            lightbox.refresh();
-        })
-        .catch(err => {
-            iziToast.error({
-                    message: err,
-                    position: 'topRight',
-                });
-        })
-        .finally(() => {
-            searchForm.reset();
-        });
+    lightbox.refresh();
+    loadMoreBtn.classList.remove('is-hidden');
+    } catch (err){
+        iziToast.error({
+                message: err,
+                position: 'topRight',
+            });
+    };
     
 };
 
