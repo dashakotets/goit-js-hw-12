@@ -14,6 +14,7 @@ const loadMoreBtn = document.querySelector('.js-load-more');
 
 
 let currentPage = 1;
+let cardHeight = 0;
 
 const lightbox = new SimpleLightbox('.gallery a', {
                 captions: true, 
@@ -29,7 +30,7 @@ const onSearchSubmit = async event => {
     currentPage = 1;
         
     loaderEl.classList.toggle('is-hidden');
-        const response = await fetchPhotos(searchedValue, currentPage);
+    const response = await fetchPhotos(searchedValue, currentPage);
     loaderEl.classList.toggle('is-hidden');
         
     if (response.data.hits.length === 0) {
@@ -48,12 +49,17 @@ const onSearchSubmit = async event => {
     galleryEl.innerHTML = galleryCardsTemplate;
 
     lightbox.refresh();
+        
+    cardHeight = galleryEl.getBoundingClientRect().height;
+
+
     loadMoreBtn.classList.remove('is-hidden');
     } catch (err){
         iziToast.error({
                 message: err,
                 position: 'topRight',
-            });
+        });
+        console.log(err);
     };
     
 };
@@ -73,15 +79,26 @@ const onAddMoreBtn = async event => {
         
         galleryEl.insertAdjacentHTML('beforeend', galleryCardsTemplate);
 
-        if (currentPage === response.data.totalHits) {
+        if (currentPage*15 >= response.data.totalHits) {
             loadMoreBtn.classList.add('is-hidden');
-        }
+            iziToast.show({
+                message: `We're sorry, but you've reached the end of search results.`,
+                position: 'topRight',
+            });
+        };
+
+        scrollBy({
+            top: cardHeight * 2,
+            behavior: 'smooth',
+        });
 
     } catch (err) {
         iziToast.error({
                 message: err,
                 position: 'topRight',
-            });
+        });
+        console.log(err);
+        
     }
 };
 
