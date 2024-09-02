@@ -80,12 +80,12 @@ a {
 }
 
 .gallery-card {
-    width: calc((100% - 60px) / 3);
+    width: calc((100% - 46px) / 3);
     border: 1px solid #808080;
 }
 
 .gallery-img {
-    width: 360px;
+    width: 100%;
     height: 200px;
     object-fit: cover;
 }
@@ -114,6 +114,12 @@ li {
     color: #ffffff;
     text-transform: uppercase;
     border-color: transparent;
+    display: flex;
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: center;
+        margin-top: 20px;
 }
 
 
