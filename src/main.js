@@ -30,7 +30,6 @@ const onSearchSubmit = async event => {
         
     loaderEl.classList.toggle('is-hidden');
         const response = await fetchPhotos(searchedValue, currentPage);
-        console.log(response);
     loaderEl.classList.toggle('is-hidden');
         
     if (response.data.hits.length === 0) {
@@ -62,7 +61,10 @@ const onSearchSubmit = async event => {
 const onAddMoreBtn = async event => {
     try {
         currentPage++;
-    
+        
+        const searchedValue = searchForm.elements.user_query.value;
+
+
         loaderEl.classList.toggle('is-hidden');
         const response = await fetchPhotos(searchedValue, currentPage);
         loaderEl.classList.toggle('is-hidden');
