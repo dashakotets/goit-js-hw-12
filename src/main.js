@@ -52,11 +52,15 @@ const onSearchSubmit = async event => {
         
     cardHeight = galleryEl.getBoundingClientRect().height;
 
+    if (!(currentPage * 15 >= response.data.totalHits)) {
+        loadMoreBtn.classList.remove('is-hidden');
+        
+    };
 
-    loadMoreBtn.classList.remove('is-hidden');
+    
     } catch (err){
         iziToast.error({
-                message: err,
+                message: err.message,
                 position: 'topRight',
         });
         console.log(err);
@@ -79,6 +83,8 @@ const onAddMoreBtn = async event => {
         
         galleryEl.insertAdjacentHTML('beforeend', galleryCardsTemplate);
 
+        lightbox.refresh();
+
         if (currentPage*15 >= response.data.totalHits) {
             loadMoreBtn.classList.add('is-hidden');
             iziToast.show({
@@ -94,7 +100,7 @@ const onAddMoreBtn = async event => {
 
     } catch (err) {
         iziToast.error({
-                message: err,
+                message: err.message,
                 position: 'topRight',
         });
         console.log(err);
